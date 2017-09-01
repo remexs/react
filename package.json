@@ -1,0 +1,26 @@
+{
+  "name": "reactdemo",
+  "version": "1.0.0",
+  "description": "React入门学习实战\r ====\r 第二章 客户端及服务器搭建\r ----",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd server && json-server db.json -w -p 3000",
+    "dev": "roadhog server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remexs/reactdemo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/remexs/reactdemo/issues"
+  },
+  "homepage": "https://github.com/remexs/reactdemo#readme",
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
+  }
+}
