@@ -87,7 +87,7 @@ ReactDOM.render((
 ```
 
 上面都搞定之后就可以执行roadhog server来启动我们的React应用了！<br>
-启动成功会自动打开http://localhost:8000，如果你看到页面里显示了”Hello react!”
+启动成功会自动打开 http://localhost:8000,如果你看到页面里显示了”Hello react!”
 
 为了节约时间我们可以把这两个指令写入package.json的scripts中
 
