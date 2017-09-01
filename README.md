@@ -10,10 +10,10 @@ React入门学习实战
 * 在path 中添加 %NODE_PATH%\;%NODE_PATH%\node_modules;%NODE_PATH%\node_global
 * 启动cmd，输入npm config set prefix "C:\Program Files\nodejs\node_global" 以及 npm config set cache "C:\Program Files\nodejs\node_cache"
 
-cmd 输入 npm i create-react-app -g
-cmd 输入 npm i yarn -g
-cmd 输入 npm i webpack -g
-cmd 输入 npm i express -g
-cmd 输入 npm i dva-cli -g
-cmd 输入 npm i json-server -g
-cmd 输入npm i roadhog -g
+cmd 输入 npm i create-react-app -g </br>
+cmd 输入 npm i yarn -g </br>
+cmd 输入 npm i webpack -g</br>
+cmd 输入 npm i express -g</br>
+cmd 输入 npm i dva-cli -g</br>
+cmd 输入 npm i json-server -g</br>
+cmd 输入npm i roadhog -g</br>
