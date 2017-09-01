@@ -99,5 +99,5 @@ ReactDOM.render((
 ```
 然后，就可以执行：
 
--npm run server<br>
+npm run server<br>
 npm run dev
