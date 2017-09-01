@@ -1,103 +1,202 @@
 # react
 React入门学习实战
 ====
-第二章 客户端及服务器搭建
+第三章 新增用户
 ----
+- 首先在/src目录下新增一个pages目录，用于存放渲染页面的组件。
+- 然后在/src/pages中新增一个Home.js文件。
+在这个文件中写入一个基本的React组件：
+````
+import {Component} from 'react';
 
-### 搭建服务器
-
-- 首先执行npm i json-server -g把json-server作为全局工具安装
-- 新建一个项目目录（后面文中所有的路径根目录都表示该项目目录）
-- 在根目录中执行npm init初始化一个npm项目（会有一些项目配置需要你输入，一直敲回车就行了）
-- 新建/server目录用于放置服务端的文件
-- 新建/server/db.json文件作为服务端的数据库文件
-- 在/server/db.json文件中写入以下数据：
-```
-{
- "user": [
-   {
-     "id": 10000,
-     "name": "一韬",
-     "age": 25,
-     "gender": "male"
-   },
-   {
-     "id": 10001,
-     "name": "张三",
-     "age": 30,
-     "gender": "female"
-   }
- ],
- "book": [
-   {
-     "id": 10000,
-     "name": "JavaScript从入门到精通",
-     "price": 9990,
-     "owner_id": 10000
-   },
-   {
-     "id": 10001,
-     "name": "Java从入门到放弃",
-     "price": 1990,
-     "owner_id": 10001
-   }
- ]
+class Home extends Component {
+  render () {
+    return (
+      <div>Home page.</div>
+    );
+  }
 }
-```
-- 最后在/server目录执行json-server db.json -w -p 3000
 
-现在打开浏览器，访问网址http://localhost:3000
+export default Home;
+````
+### 配置路由
+- 修改/src/index.js为：
 
-### 搭建客户端
-- 在根目录执行npm i roadhog -g来安装roadhog，这是一个快速且功能强大的react项目搭建工具
-- 新建/src目录，用于存放客户端代码
-- 新建/public目录，用户存放项目的静态文件（图片等）
-- 新建/src/index.js和/public/index.html两个文件，分别作为应用的入口文件和页面的入口文件
-- 执行npm i react react-dom react-router react-router-dom -S，安装基本的react依赖(安装后将在package.json中写入相关依赖)
-- 在/src/index.js中写入以下代码
-```
+````
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import HomePage from './pages/Home';
 ReactDOM.render((
-  <div>Hello React!</div>
+    <Router>
+        <Switch>
+            <Route exact path="/" component={HomePage}/>
+        </Switch>
+    </Router>
 ), document.getElementById('app'));
+````
+-  <a href="http://reacttraining.cn/web/guides/quick-start">react-router4.x API</a> 
+- 然后在/src/pages中新增一个/user/UserAdd.js用户编辑文件.
+在这个文件中写入一个UserAdd的React组件：
+````
+import {Component} from 'react';
 
-```
+class UserAdd extends Component {
+    render() {
+        return (
+            <div>
+                <header>
+                    <h1>添加用户</h1>
+                </header>
 
-- 在/public/index.html里写入以下代码
+                <main>
+                    <form>
+                        <label>用户名：</label>
+                        <input type="text"/>
+                        <br/>
+                        <label>年龄：</label>
+                        <input type="number"/>
+                        <br/>
+                        <label>性别：</label>
+                        <select>
+                            <option value="">请选择</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                        </select>
+                        <br/>
+                        <br/>
+                        <input type="submit" value="提交"/>
+                    </form>
+                </main>
+            </div>
+        );
+    }
+};
+export default UserAdd;
+````
+- 然后在index.js 中添加路由
+````
+...
+import UserAddPage from './pages/user/UserAdd';
+...
+ReactDOM.render((
+  <Router history={hashHistory}>
+    <Route path="/" component={HomePage}/>
+    <Route path="/user/add" component={UserAddPage}/>
+  </Router>
+), document.getElementById('app'));
+````
+- 修改 /pages/Home.js 添加导航链接到用户编辑页面。
+````
+import {Component} from 'react';
+import { Link } from 'react-router-dom';
+class Home extends Component {
+    render() {
+        return (
+            <Link to="/user/add">添加用户</Link>
+        );
+    }
+};
+export default Home;
+````
+### 获取表单的值 并向服务插入数据
 
-```
-<!doctype html>
-<html lang="zh-cn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hello React</title>
-</head>
-<body>
-  <!-- 这个div必须和index.js里的render方法里传入的第二个参数保持一致 -->
-  <div id="app"></div>
-  <!-- roadhog背后会把你的代码从入口文件开始打包成一个index.js文件 -->
-  <script src="./index.js"></script>
-</body>
-</html>
-```
+- 在 /pages/user/UserAdd.js 中添加构造函数 使用 state 维护表单值
 
-上面都搞定之后就可以执行roadhog server来启动我们的React应用了！<br>
-启动成功会自动打开 http://localhost:8000,如果你看到页面里显示了”Hello react!”
-
-为了节约时间我们可以把这两个指令写入package.json的scripts中
-
-```
-"scripts": {
-  "server": "cd server && json-server db.json -w -p 3000",
-  "dev": "roadhog server"
+````
+class UserAdd extends React.Component {
+    constructor () {
+        super();
+        this.state = {
+          name: '',
+          age: 0,
+          gender: ''
+        };
+        this.handleSubmit.bind(this);//表单提交时this为空，这里使用绑定this。
+    }
 }
-```
-然后，就可以执行：
+````
+- 并添加表单提交处理函数
+````
+    handleValueChange (field, value, type = 'string') {
+        // 由于表单的值都是字符串，我们可以根据传入type为number来手动转换value的类型为number类型
+        if (type === 'number') {
+            value = +value;
+        }
 
-npm run server<br>
-npm run dev
+        this.setState({
+            [field]: value
+        });
+    }
+````
+- 修改render函数绑定事件
+````
+     render () {
+        const {name, age, gender} = this.state;
+        return (
+            <div>
+                <header>
+                    <h1>添加用户</h1>
+                </header>
+    
+                <main>
+                    <form onSubmit={(e) => this.handleSubmit(e)}>
+                        <label>用户名：</label>
+                        <input type="text" value={name} onChange={(e) => this.handleValueChange('name', e.target.value)}/>
+                        <br/>
+                        <label>年龄：</label>
+                        <input type="number" value={age || ''} onChange={(e) => this.handleValueChange('age', e.target.value, 'number')}/>
+                        <br/>
+                        <label>性别：</label>
+                        <select value={gender} onChange={(e) => this.handleValueChange('gender', e.target.value)}>
+                            <option value="">请选择</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                        </select>
+                        <br/>
+                        <br/>
+                        <input type="submit" value="提交"/>
+                    </form>
+                </main>
+            </div>
+        );
+     }
+````
+- 修改 表单提交处理函数 向服务器插入数据
+````
+ handleSubmit(e) {
+        // 阻止表单submit事件自动跳转页面的动作
+        e.preventDefault();
+        console.log(this);
+        const {name, age, gender} = this.state;
+        fetch('http://localhost:3000/user', {
+            method: 'post',
+            // 使用fetch提交的json数据需要使用JSON.stringify转换为字符串
+            body: JSON.stringify({
+                name,
+                age,
+                gender
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                // 当添加成功时，返回的json对象中应包含一个有效的id字段
+                // 所以可以使用res.id来判断添加是否成功
+                if (res.id) {
+                    alert('添加用户成功');
+                    this.setState({
+                        name: '',
+                        age: 0,
+                        gender: ''
+                    });
+                } else {
+                    alert('添加失败');
+                }
+            })
+            .catch((err) => console.error(err));
+    }
+````
+
