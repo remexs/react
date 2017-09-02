@@ -6,7 +6,8 @@ class UserAdd extends Component {
         this.state = {
             name: '',
             age: 0,
-            gender: ''
+            gender: '',
+            id: null
         };
         this.handleSubmit.bind(this);//表单提交时this为空，这里使用绑定this。
     }
@@ -22,13 +23,31 @@ class UserAdd extends Component {
         });
     }
 
+    componentWillMount() {
+        const userId = this.props.match.params.id;
+        if (userId) {
+            fetch('http://localhost:3000/user/' + userId)
+                .then(res => res.json())
+                .then(res => {
+                    this.setState(res);
+                });
+        }
+
+    }
+
     handleSubmit(e) {
         // 阻止表单submit事件自动跳转页面的动作
         e.preventDefault();
         console.log(this);
-        const {name, age, gender} = this.state;
-        fetch('http://localhost:3000/user', {
-            method: 'post',
+        const {name, age, gender,id} = this.state;
+        let apiUrl = 'http://localhost:3000/user';
+        let method = 'post';
+        if(id){
+            apiUrl += '/' + id;
+            method = 'put';
+        }
+        fetch(apiUrl, {
+            method: method,
             // 使用fetch提交的json数据需要使用JSON.stringify转换为字符串
             body: JSON.stringify({
                 name,
@@ -48,8 +67,10 @@ class UserAdd extends Component {
                     this.setState({
                         name: '',
                         age: 0,
-                        gender: ''
+                        gender: '',
+                        id:null
                     });
+                    this.props.history.push("/user");
                 } else {
                     alert('添加失败');
                 }
@@ -58,7 +79,7 @@ class UserAdd extends Component {
     }
 
     render() {
-        const {name, age, gender} = this.state;
+        const {name, age, gender,id} = this.state;
         return (
             <div>
                 <header>
@@ -68,6 +89,7 @@ class UserAdd extends Component {
                 <main>
                     <form onSubmit={(e) => this.handleSubmit(e)}>
                         <label>用户名：</label>
+                        <input type="hidden" value={id} />
                         <input type="text" value={name} onChange={(e) => this.handleValueChange('name', e.target.value)}/>
                         <br/>
                         <label>年龄：</label>
